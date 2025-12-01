@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stok Bahan Ajar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-ut">
+        <div class="container">
+            <span class="navbar-brand">Sistem Informasi Bahan Ajar</span>
+            <div class="d-flex gap-3">
+                <a href="index.html" class="nav-link-ut">Home</a>
+                <a href="stok.html" class="nav-link-ut active">Stok Bahan Ajar</a>
+                <a href="tracking.html" class="nav-link-ut">Tracking DO</a>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mainApp" class="container mt-5 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold text-dark">Stok Bahan Ajar</h3>
+            <button class="btn-black" @click="bukaModalTambah">
+                <i class="fas fa-plus"></i> Tambah Bahan Ajar
+            </button>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="p-3 bg-white border rounded-3 shadow-sm d-flex align-items-center gap-3">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary"><i class="fas fa-book fa-lg"></i></div>
+                    <div>
+                        <div class="small text-muted fw-bold">Total Judul MK</div>
+                        <div class="h4 mb-0 fw-bold">{{ stokData.length }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 bg-white border rounded-3 shadow-sm d-flex align-items-center gap-3">
+                    <div class="bg-danger bg-opacity-10 p-3 rounded-circle text-danger"><i class="fas fa-exclamation-triangle fa-lg"></i></div>
+                    <div>
+                        <div class="small text-muted fw-bold">Perlu Restock</div>
+                        <div class="h4 mb-0 fw-bold text-danger">{{ totalRestock }} Item</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-card">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="filter-label">UT-Daerah</label>
+                    <select v-model="filter.upbjj" class="form-select border-0 shadow-sm" aria-label="Filter Daerah">
+                        <option value="">Semua UPBJJ</option>
+                        <option v-for="u in upbjjList" :value="u">{{ u }}</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="filter-label">Filter Status</label>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" v-model="filter.lowStock" id="chkLow" aria-label="Menipis">
+                            <label class="form-check-label small fw-bold text-secondary" for="chkLow">Stok Menipis</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" v-model="filter.emptyStock" id="chkEmpty" aria-label="Kosong">
+                            <label class="form-check-label small fw-bold text-secondary" for="chkEmpty">Stok Kosong</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="filter-label">Urutkan</label>
+                    <select v-model="sortBy" class="form-select border-0 shadow-sm" aria-label="Urutkan">
+                        <option value="default">Tidak ada urutan</option>
+                        <option value="judul">Nama MK (A-Z)</option>
+                        <option value="stok">Stok (Terendah)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-rounded">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Kode</th><th>Nama MK</th><th>Kategori</th><th>UPBJJ</th><th>Rak</th>
+                        <th>Harga</th><th>Stok</th><th>Status</th><th>Catatan</th><th class="text-end">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in filteredStok" :key="index">
+                        <td class="text-muted">{{ item.kode }}</td>
+                        <td class="fw-bold">{{ item.judul }}</td>
+                        <td>{{ item.kategori }}</td>
+                        <td>{{ item.upbjj }}</td>
+                        <td>{{ item.lokasiRak }}</td>
+                        <td>{{ formatRupiah(item.harga) }}</td>
+                        <td>{{ item.qty }}</td>
+                        <td>
+                            <span v-if="item.qty === 0" class="status-danger"><i class="fas fa-times-circle"></i> Kosong</span>
+                            <span v-else-if="item.qty < item.safety" class="status-warning"><i class="fas fa-exclamation-triangle"></i> Menipis</span>
+                            <span v-else class="status-aman"><i class="fas fa-check-circle"></i> Aman</span>
+                        </td>
+                        <td class="small text-muted" v-html="item.catatanHTML"></td>
+                        <td class="text-end td-action">
+                            <button class="btn btn-sm btn-light rounded-circle border me-1" @click="bukaModalEdit(item)" aria-label="Edit"><i class="fas fa-pen text-dark"></i></button>
+                            <button class="btn btn-sm btn-light rounded-circle border text-danger" @click="hapusData(item)" aria-label="Hapus"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal fade" id="stokModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content p-3">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title fw-bold">{{ modalTitle }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit.prevent="simpanData">
+                            <div class="row g-3">
+                                <div class="col-md-6"><label class="small fw-bold">Kode MK *</label><input v-model="form.kode" class="form-control form-control-modal" required aria-label="Kode"></div>
+                                <div class="col-md-6"><label class="small fw-bold">Judul *</label><input v-model="form.judul" class="form-control form-control-modal" required aria-label="Judul"></div>
+                                <div class="col-md-6"><label class="small fw-bold">Kategori *</label>
+                                    <select v-model="form.kategori" class="form-select form-control-modal" required aria-label="Kategori">
+                                        <option v-for="k in kategoriList" :value="k">{{ k }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6"><label class="small fw-bold">UPBJJ *</label>
+                                    <select v-model="form.upbjj" class="form-select form-control-modal" required aria-label="UPBJJ">
+                                        <option v-for="u in upbjjList" :value="u">{{ u }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6"><label class="small fw-bold">Lokasi Rak</label><input v-model="form.lokasiRak" class="form-control form-control-modal" aria-label="Rak"></div>
+                                <div class="col-md-6"><label class="small fw-bold">Harga</label><input type="number" v-model.number="form.harga" class="form-control form-control-modal" aria-label="Harga"></div>
+                                <div class="col-md-6"><label class="small fw-bold">Stok</label><input type="number" v-model.number="form.qty" class="form-control form-control-modal" aria-label="Stok"></div>
+                                <div class="col-md-6"><label class="small fw-bold">Safety Stock</label><input type="number" v-model.number="form.safety" class="form-control form-control-modal" aria-label="Safety"></div>
+                                <div class="col-12"><label class="small fw-bold">Catatan</label><input v-model="form.catatanHTML" class="form-control form-control-modal" aria-label="Catatan"></div>
+                            </div>
+                            <div class="d-flex justify-content-end gap-2 mt-4">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-black">Simpan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>&copy; 2025 Universitas Terbuka</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="js/dataBahanAjar.js"></script>
+    <script src="js/stok-app.js"></script>
+</body>
+</html>

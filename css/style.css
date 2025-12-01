@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- HEADER BIRU UT --- */
+.navbar-ut {
+    background-color: #1d4ed8;
+    padding: 15px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.navbar-brand {
+    color: white !important;
+    font-weight: 700;
+}
+.nav-link-ut {
+    color: rgba(255,255,255,0.8) !important;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+.nav-link-ut:hover, .nav-link-ut.active {
+    background: rgba(255,255,255,0.2);
+    color: white !important;
+}
+
+/* --- TOMBOL HITAM --- */
+.btn-black {
+    background-color: #0f172a;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: 600;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+.btn-black:hover { background-color: #334155; color: white; }
+
+/* --- FILTER CARD --- */
+.filter-card {
+    background-color: #f1f5f9;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+.filter-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 8px;
+    display: block;
+    text-transform: uppercase;
+}
+
+/* --- TABEL STOK --- */
+.table-rounded {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+.table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #334155;
+    padding: 15px;
+    border-bottom: 2px solid #e2e8f0;
+}
+.table td {
+    vertical-align: middle;
+    padding: 15px;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+.td-action { min-width: 110px; }
+
+/* --- STATUS BADGES --- */
+.status-aman { color: #16a34a; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.status-warning { color: #ea580c; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.status-danger { color: #dc2626; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+
+/* --- TRACKING CARDS --- */
+.search-container {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    margin-bottom: 30px;
+}
+.do-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.02);
+}
+
+/* --- TIMELINE --- */
+.timeline {
+    position: relative;
+    padding-left: 20px;
+    margin-top: 20px;
+    border-left: 2px solid #e2e8f0;
+}
+.timeline-item { position: relative; margin-bottom: 20px; padding-left: 20px; }
+.timeline-point {
+    position: absolute; left: -27px; top: 0;
+    width: 12px; height: 12px;
+    background-color: #3b82f6; border-radius: 50%;
+    border: 2px solid white; box-shadow: 0 0 0 2px #dbeafe;
+}
+.timeline-time { font-size: 12px; color: #94a3b8; }
+.timeline-desc { font-size: 14px; color: #334155; font-weight: 500; }
+
+/* --- HELPER CLASSES (Pengganti Inline Style) --- */
+.hero-card {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.hover-shadow { transition: transform 0.2s, box-shadow 0.2s; }
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    background-color: #fff !important;
+    border-color: #b3d7ff !important;
+}
+.modal-content { border-radius: 16px; border: none; }
+.form-control-modal { background-color: #f8fafc; border: 1px solid #e2e8f0; }
+
+footer { margin-top: auto; background-color: #0f172a; color: #94a3b8; text-align: center; padding: 20px; font-size: 14px; }
